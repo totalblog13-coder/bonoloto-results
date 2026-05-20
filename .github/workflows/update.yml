@@ -1,11 +1,11 @@
 name: Update results.json
 
 on:
-  schedule:
-    # Ежедневно 04:00 UTC (≈ 06:00 Madrid). Тиражи Bonoloto вечерние,
-    # к ночи источник уже отдаёт результаты.
-    - cron: "0 4 * * *"
-  workflow_dispatch: {}  # ручной запуск из вкладки Actions
+  # Cron отключён: API loteriasyapuestas.es блокирует IP GitHub Actions
+  # (geo-fence Spain only). Скрапер крутится на Linux-машине пользователя,
+  # см. ~/bonoloto-results/daily.sh + cron на Mint. Здесь оставлен только
+  # ручной запуск — на случай ручного дебага из веб-UI.
+  workflow_dispatch: {}
 
 permissions:
   contents: write

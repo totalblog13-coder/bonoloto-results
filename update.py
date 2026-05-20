@@ -120,6 +120,21 @@ def main() -> int:
     sorted_draws = sorted(by_date.values(), key=lambda d: d["date"], reverse=True)
     latest = sorted_draws[:LIMIT]
 
+    if not latest:
+        print("ERR: no draws fetched, results.json not touched")
+        return 1
+
+    # Не перезаписываем файл, если данные не изменились (избегаем пустых
+    # ежедневных коммитов из-за обновления `updated_at`).
+    if OUT_PATH.exists():
+        try:
+            old = json.loads(OUT_PATH.read_text(encoding="utf-8"))
+            if old.get("draws") == latest:
+                print(f"NO CHANGES: latest {latest[0]['date']}, file untouched")
+                return 0
+        except Exception as e:
+            print(f"WARN reading old file: {e}", file=sys.stderr)
+
     payload = {
         "updated_at": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
         "game": "bonoloto",
@@ -131,9 +146,8 @@ def main() -> int:
         encoding="utf-8",
     )
     print(f"OK: {len(latest)} draws -> {OUT_PATH.name}")
-    if latest:
-        print(f"Latest: {latest[0]['date']} draw {latest[0]['draw_no']}")
-    return 0 if latest else 1
+    print(f"Latest: {latest[0]['date']} draw {latest[0]['draw_no']}")
+    return 0
 
 
 if __name__ == "__main__":
