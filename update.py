@@ -21,8 +21,13 @@ import requests
 
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8", errors="replace")
 
-API_URL = "https://www.loteriasyapuestas.es/servicios/buscadorSorteos"
-UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
+BASE = "https://www.loteriasyapuestas.es"
+API_URL = BASE + "/servicios/buscadorSorteos"
+WARMUP_URL = BASE + "/es/bonoloto"
+UA = (
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
+    "(KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36"
+)
 OUT_PATH = Path(__file__).parent / "results.json"
 LIMIT = 20  # сколько последних тиражей кладём в results.json
 
@@ -42,7 +47,12 @@ def fetch_month(session: requests.Session, year: int, month: int) -> list[dict]:
     }
     for attempt in range(3):
         try:
-            r = session.get(API_URL, params=params, timeout=20)
+            r = session.get(
+                API_URL,
+                params=params,
+                timeout=20,
+                headers={"Referer": WARMUP_URL, "X-Requested-With": "XMLHttpRequest"},
+            )
             r.raise_for_status()
             data = r.json()
             break
@@ -81,7 +91,23 @@ def main() -> int:
     months = [previous_month(today.year, today.month), (today.year, today.month)]
 
     session = requests.Session()
-    session.headers.update({"User-Agent": UA})
+    session.headers.update({
+        "User-Agent": UA,
+        "Accept": "application/json, text/javascript, */*; q=0.01",
+        "Accept-Language": "es-ES,es;q=0.9,en;q=0.8",
+        "Accept-Encoding": "gzip, deflate, br",
+        "Connection": "keep-alive",
+        "Sec-Fetch-Dest": "empty",
+        "Sec-Fetch-Mode": "cors",
+        "Sec-Fetch-Site": "same-origin",
+    })
+
+    # Прогрев: заходим на страницу Bonoloto, чтобы получить cookies сессии
+    # (некоторые гос-сайты блокируют API без предыдущего GET на главную).
+    try:
+        session.get(WARMUP_URL, timeout=20)
+    except Exception as e:
+        print(f"WARMUP ERR: {e}", file=sys.stderr)
 
     draws: list[dict] = []
     for y, m in months:
