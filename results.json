@@ -1,7 +1,21 @@
 {
-  "updated_at": "2026-05-30T04:00:04Z",
+  "updated_at": "2026-05-31T04:00:04Z",
   "game": "bonoloto",
   "draws": [
+    {
+      "date": "2026-05-30",
+      "draw_no": "150",
+      "numbers": [
+        15,
+        16,
+        18,
+        19,
+        21,
+        47
+      ],
+      "complementario": 20,
+      "reintegro": 5
+    },
     {
       "date": "2026-05-29",
       "draw_no": "149",
@@ -267,20 +281,6 @@
       ],
       "complementario": 36,
       "reintegro": 0
-    },
-    {
-      "date": "2026-05-10",
-      "draw_no": "130",
-      "numbers": [
-        3,
-        19,
-        28,
-        29,
-        30,
-        48
-      ],
-      "complementario": 47,
-      "reintegro": 1
     }
   ]
 }
