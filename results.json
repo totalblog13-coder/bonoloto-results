@@ -1,7 +1,21 @@
 {
-  "updated_at": "2026-06-22T04:00:04Z",
+  "updated_at": "2026-06-23T04:00:06Z",
   "game": "bonoloto",
   "draws": [
+    {
+      "date": "2026-06-22",
+      "draw_no": "173",
+      "numbers": [
+        3,
+        5,
+        9,
+        41,
+        43,
+        44
+      ],
+      "complementario": 47,
+      "reintegro": 3
+    },
     {
       "date": "2026-06-21",
       "draw_no": "172",
@@ -267,20 +281,6 @@
       ],
       "complementario": 8,
       "reintegro": 5
-    },
-    {
-      "date": "2026-06-02",
-      "draw_no": "153",
-      "numbers": [
-        1,
-        22,
-        33,
-        36,
-        40,
-        41
-      ],
-      "complementario": 49,
-      "reintegro": 7
     }
   ]
 }
